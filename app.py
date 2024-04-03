@@ -25,6 +25,10 @@ from .model.user import User, user_schema
 def user():
     user_name=request.json["user_name"]
     password=request.json["password"]
+    # Check if user_name already exists
+    user = User.query.filter_by(user_name=user_name).first()
+    if user:
+        return abort(400, description="User already exists")
     new_user = User(
         user_name=user_name,
         password=password
@@ -73,7 +77,6 @@ def extract_auth_token(authenticated_request):
 def decode_token(token):
     payload = jwt.decode(token, SECRET_KEY, 'HS256')
     return payload['sub']
-
 
 
 
