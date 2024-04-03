@@ -18,7 +18,7 @@ ma = Marshmallow(app)
 bcrypt = Bcrypt(app)
 CORS(app)
 db = SQLAlchemy(app)
-  
+
 from .model.user import User, user_schema
 
 
