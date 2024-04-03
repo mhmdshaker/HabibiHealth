@@ -18,9 +18,24 @@ ma = Marshmallow(app)
 bcrypt = Bcrypt(app)
 CORS(app)
 db = SQLAlchemy(app)
-  
+
 from .model.user import User, user_schema
 
+@app.route('/user', methods=['POST'])
+def user():
+    user_name=request.json["user_name"]
+    password=request.json["password"]
+    # Check if user_name already exists
+    user = User.query.filter_by(user_name=user_name).first()
+    if user:
+        return abort(400, description="User already exists")
+    new_user = User(
+        user_name=user_name,
+        password=password
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(user_schema.dump(new_user))
 
 
 
