@@ -19,7 +19,9 @@ bcrypt = Bcrypt(app)
 CORS(app)
 db = SQLAlchemy(app)
 
-from .model.user import User, user_schema
+from .model.user import User, user_schema 
+from .model.food import Food, food_schema
+from .model.exercise import Exercise, exercise_schema
 
 @app.route('/user', methods=['POST'])
 def user():
