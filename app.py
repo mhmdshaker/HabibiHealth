@@ -21,6 +21,18 @@ db = SQLAlchemy(app)
   
 from .model.user import User, user_schema
 
+@app.route('/user', methods=['POST'])
+def user():
+    user_name=request.json["user_name"]
+    password=request.json["password"]
+    new_user = User(
+        user_name=user_name,
+        password=password
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(user_schema.dump(new_user))
+
 
 
 
