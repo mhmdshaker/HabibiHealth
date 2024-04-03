@@ -10,8 +10,8 @@ class Exercise(db.Model):
         super(Exercise, self).__init__(name=name, calories_burnt=calories_burnt)
 
 
-class user_schema(ma.Schema):
+class exercise_schema(ma.Schema):
  class Meta:
     fields = ("id", "name", "calories_burnt")
     model = Exercise
-user_schema = user_schema()
+exercise_schema = exercise_schema()

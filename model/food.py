@@ -10,8 +10,8 @@ class Food(db.Model):
         super(Food, self).__init__(name=name, calories=calories)
 
 
-class user_schema(ma.Schema):
+class food_schema(ma.Schema):
  class Meta:
     fields = ("id", "name", "calories")
     model = Food
-user_schema = user_schema()
+food_schema = food_schema()
