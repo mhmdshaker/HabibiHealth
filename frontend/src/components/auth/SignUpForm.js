@@ -1,49 +1,45 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-
-const schema = yup.object({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8).required(),
-  dateOfBirth: yup.date().required(),
-  weight: yup.number().positive().required(),
-  height: yup.number().positive().required(),
-}).required();
+import './SignUpForm.css'; // Make sure this path is correct
 
 export const SignUpForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
+    // Your form validation resolver
   });
 
   const onSubmit = data => {
     console.log(data);
-    // Here you would usually send the data to the backend to create the user
+    // Send data to the backend to create a new user
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("name")} placeholder="Name" />
-      <p>{errors.name?.message}</p>
-      
-      <input {...register("email")} placeholder="Email" />
-      <p>{errors.email?.message}</p>
-      
-      <input type="password" {...register("password")} placeholder="Password" />
-      <p>{errors.password?.message}</p>
-      
-      <input type="date" {...register("dateOfBirth")} placeholder="Date of Birth" />
-      <p>{errors.dateOfBirth?.message}</p>
-      
-      <input type="number" {...register("weight")} placeholder="Weight (kg)" />
-      <p>{errors.weight?.message}</p>
-      
-      <input type="number" {...register("height")} placeholder="Height (cm)" />
-      <p>{errors.height?.message}</p>
-      
-      <button type="submit">Sign Up</button>
-    </form>
+    <div className="sign-up-form-container">
+      <h2 className="sign-up-form-title">Create Account</h2>
+      <form className="sign-up-form" onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("name")} placeholder="Name" />
+        {errors.name && <p>{errors.name.message}</p>}
+        
+        <input {...register("email")} placeholder="Email" />
+        {errors.email && <p>{errors.email.message}</p>}
+        
+        <input type="password" {...register("password")} placeholder="Password" />
+        {errors.password && <p>{errors.password.message}</p>}
+        
+        <input type="date" {...register("dateOfBirth")} placeholder="Date of Birth" />
+        {errors.dateOfBirth && <p>{errors.dateOfBirth.message}</p>}
+        
+        <input type="number" {...register("weight")} placeholder="Weight (kg)" />
+        {errors.weight && <p>{errors.weight.message}</p>}
+        
+        <input type="number" {...register("height")} placeholder="Height (cm)" />
+        {errors.height && <p>{errors.height.message}</p>}
+        
+        <button type="submit">Sign Up</button>
+      </form>
+      <div className="sign-up-form-footer">
+        Already have an account? <a href="/login">Login here</a>
+      </div>
+    </div>
   );
 };
 
