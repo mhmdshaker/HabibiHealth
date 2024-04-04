@@ -70,25 +70,15 @@ def user():
     msg['From'] = sender
     msg['To'] = receivers[0]
 
-    # Create the plain-text version of the message
-    text = """\
-    Congrats for sending test email with Mailtrap!
 
-    If you are viewing this email in your inbox – the integration works.
-    Now send your email using our SMTP server and integration of your choice!
-
-    Good luck! Hope it works.
-    """
-    
     # Create the HTML version of the message
     html = """\
-    <!-- ... -->
+    <p>Congrats for sending test email with Mailtrap! \nIf you are viewing this email in your inbox – the integration works. Now send your email using our SMTP server and integration of your choice!\nGood luck! Hope it works.</p>
     <p><a href="{}">Click here to confirm your email</a></p>
     <!-- ... -->
     """.format(link)
     
     # Attach the plain-text and HTML versions to the message
-    msg.attach(MIMEText(text, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
     with smtplib.SMTP('live.smtp.mailtrap.io', 587) as server:
@@ -119,8 +109,7 @@ def confirm_email(token):
     # Set the user's confirmed field to True
     user.confirmed = True
     db.session.commit()
-
-    return jsonify(user_schema.dump(user))
+    return render_template('homepage.html')
 
 
 
