@@ -1,0 +1,33 @@
+/* SearchFood.css */
+
+.search-food-container {
+    padding: 20px;
+    background: #f9f9f9; /* A light background for the container */
+  }
+  
+  .search-food-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .search-food-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    flex-grow: 1; /* To take the available space */
+  }
+  
+  .search-food-button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .search-food-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }

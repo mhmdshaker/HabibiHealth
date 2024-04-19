@@ -1,0 +1,26 @@
+.hero-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #004d40;
+    background-color: #F0F0F0; /* Light gray background */
+  }
+  
+  .hero-section h1 {
+    margin-bottom: 1rem;
+    color: #003366; /* Dark blue color */
+  }
+  
+  .hero-section p {
+    margin-bottom: 2rem;
+  }
+  .hero-section button {
+    background-color: #00897b; /* A shade of medium green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .hero-section button:hover {
+    background-color: #00695c; /* Darken the button when hovering for a nice effect */
+  }
