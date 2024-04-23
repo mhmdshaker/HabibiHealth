@@ -6,10 +6,10 @@ class AddExercise(db.Model):
     exercise_id = db.Column(db.Integer, db.ForeignKey("exercise.id") , primary_key=True)
     duration = db.Column(db.Integer)
     
-    def __init__(self, user_id, exercise_id,duration):
+    def __init__(self, user_id, exercise_id, duration):
         self.user_id = user_id
         self.exercise_id = exercise_id
-        self.duration=duration
+        self.duration = duration
 
 class AddExerciseSchema(ma.Schema):
     class Meta:
