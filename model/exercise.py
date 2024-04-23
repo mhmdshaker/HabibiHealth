@@ -7,11 +7,14 @@ class Exercise(db.Model):
     calories_burnt = db.Column(db.Float, unique=False)
     
     def __init__(self, name, calories_burnt):
-        super(Exercise, self).__init__(name=name, calories_burnt=calories_burnt)
+        self.name = name
+        self.calories_burnt = calories_burnt
+
 
 
 class exercise_schema(ma.Schema):
- class Meta:
-    fields = ("id", "name", "calories_burnt")
-    model = Exercise
-exercise_schema = exercise_schema()
+    class Meta:
+        fields = ("id", "name", "calories_burnt")
+        model = Exercise
+Exercise_schema = exercise_schema()
+Exercise_schema = exercise_schema(many=True)

@@ -29,7 +29,8 @@ db = SQLAlchemy(app)
 
 from .model.user import User, user_schema
 from .model.food import Food, food_schema
-from .model.exercise import Exercise, exercise_schema
+from .model.exercise import Exercise, Exercise_schema
+from .model.addExercise import AddExercise, AddExerciseSchema
 
 app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io'  # address
 app.config['MAIL_PORT'] = 587  # port
@@ -154,23 +155,16 @@ def decode_token(token):
     payload = jwt.decode(token, SECRET_KEY, 'HS256')
     return payload['sub']
 
-
-@app.route('/foodlist', methods=['GET'])
-def get_food_list():
-    try:
-        foods = Food.query.all()
-        food_list = food_schema.dump(foods)
-        print(food_list)
-        return jsonify({'food_list': food_list})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 @app.route('/exerciselist', methods=['GET'])
 def get_exercise_list():
     try:
         exercises = Exercise.query.all()
-        exercise_list = exercise_schema.dump(exercises)
-        print(exercise_list)
-        return jsonify({'exercise_list': exercise_list})
+
+        for exercise in exercises:
+            print(f"ID: {exercise.id}, Name: {exercise.name}, Calories Burnt: {exercise.calories_burnt}")
+
+        print(exercises)
+  
+        return jsonify(Exercise_schema.dump(exercises))
     except Exception as e:
         return jsonify({'error': str(e)}), 500
