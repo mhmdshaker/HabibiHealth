@@ -155,32 +155,32 @@ def decode_token(token):
 
 
 
-from .model.food import Food, food_schema
-@app.route('/search_food', methods=['GET'])
-def search_food():
-    # Get the search query from the request
-    query = request.args.get('query')
-    matching_food_items = Food.query.filter(Food.name.contains(query)).all()
-    matching_food_items_data = food_schema.dump(matching_food_items, many=True)
-    if matching_food_items:
-        matching_food_items_data = food_schema.dump(matching_food_items, many=True)
-        return jsonify(matching_food_items_data)
-    else:
-        return jsonify(message='No matching food items found'), 404
+# from .model.food import Food, food_schema
+# @app.route('/search_food', methods=['GET'])
+# def search_food():
+#     # Get the search query from the request
+#     query = request.args.get('query')
+#     matching_food_items = Food.query.filter(Food.name.contains(query)).all()
+#     matching_food_items_data = food_schema.dump(matching_food_items, many=True)
+#     if matching_food_items:
+#         matching_food_items_data = food_schema.dump(matching_food_items, many=True)
+#         return jsonify(matching_food_items_data)
+#     else:
+#         return jsonify(message='No matching food items found'), 404
 
-@app.route('/add_food', methods=['POST'])
-def add_food():
-    data = request.get_json()
-    new_food = Food(
-        name=data['name'],
-        description=data['description'],
-        price=data['price'],
-        calories=data['calories'],
-        protein=data['protein'],
-        fat=data['fat'],
-        carbohydrates=data['carbohydrates']
-    )
+# @app.route('/add_food', methods=['POST'])
+# def add_food():
+#     data = request.get_json()
+#     new_food = Food(
+#         name=data['name'],
+#         description=data['description'],
+#         price=data['price'],
+#         calories=data['calories'],
+#         protein=data['protein'],
+#         fat=data['fat'],
+#         carbohydrates=data['carbohydrates']
+#     )
 
-    db.session.add(new_food)
-    db.session.commit()
-    return food_schema.jsonify(message = 'added successfuly'), 201
+#     db.session.add(new_food)
+#     db.session.commit()
+#     return food_schema.jsonify(message = 'added successfuly'), 201
