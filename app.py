@@ -168,39 +168,3 @@ def search_food():
     else:
         return jsonify(message='No matching food items found'), 404
 
-@app.route('/add_food', methods=['POST'])
-def add_food():
-    data = request.get_json()
-    new_food = Food(
-        name=data['name'],
-        description=data['description'],
-        price=data['price'],
-        calories=data['calories'],
-        protein=data['protein'],
-        fat=data['fat'],
-        carbohydrates=data['carbohydrates']
-    )
-
-    db.session.add(new_food)
-    db.session.commit()
-    return food_schema.jsonify(message = 'added successfuly'), 201
-
-@app.route('/foodlist', methods=['GET'])
-def get_food_list():
-    try:
-        foods = Food.query.all()
-        food_list = food_schema.dump(foods)
-        print(food_list)
-        return jsonify({'food_list': food_list})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/exerciselist', methods=['GET'])
-def get_exercise_list():
-    try:
-        exercises = Exercise.query.all()
-        exercise_list = exercise_schema.dump(exercises)
-        print(exercise_list)
-        return jsonify({'exercise_list': exercise_list})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
