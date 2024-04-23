@@ -168,3 +168,36 @@ def get_exercise_list():
         return jsonify(Exercise_schema.dump(exercises))
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/add_exercise', methods=['POST'])
+def add_exercise_to_user():
+    try:
+        # Extract the user ID from the authentication token
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Authorization token is missing'}), 401
+        
+        user_id = decode_token(token)
+        
+        # Fetch the user from the database
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Get the exercise data from the request
+        exercise_id = request.json.get('exercise_id')
+        duration = request.json.get('duration')  # Assuming the duration of exercise is provided
+        
+        # Fetch the exercise from the database
+        exercise = Exercise.query.get(exercise_id)
+        if not exercise:
+            return jsonify({'error': 'Exercise not found'}), 404
+        
+        # Create a new record in the AddExercise table
+        new_add_exercise = AddExercise(user_id=user_id, exercise_id=exercise_id, duration=duration)
+        db.session.add(new_add_exercise)
+        db.session.commit()
+        
+        return jsonify({'message': 'Exercise added to user successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
