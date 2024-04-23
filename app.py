@@ -7,6 +7,7 @@ import jwt
 from flask_cors import cross_origin
 
 from .db_config import DB_CONFIG
+#new for mail:
 from flask import Flask, request, jsonify, abort, url_for, render_template
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -24,6 +25,11 @@ ma = Marshmallow(app)
 bcrypt = Bcrypt(app)
 CORS(app)
 db = SQLAlchemy(app)
+
+
+from .model.user import User, user_schema
+from .model.food import Food, food_schema
+from .model.exercise import Exercise, exercise_schema
 
 app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io'  # address
 app.config['MAIL_PORT'] = 587  # port
@@ -168,4 +174,3 @@ def get_exercise_list():
         return jsonify({'exercise_list': exercise_list})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
