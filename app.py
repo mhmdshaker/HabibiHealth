@@ -28,6 +28,10 @@ db = SQLAlchemy(app)
 
 
 from .model.user import User, user_schema
+from .model.food import Food, food_schema
+from .model.exercise import Exercise, Exercise_schema
+from .model.addExercise import AddExercise, AddExerciseSchema
+from .model.AddFood import AddFood, AddFoodSchema
 
 app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io'  # address
 app.config['MAIL_PORT'] = 587  # port
@@ -73,7 +77,7 @@ def user():
 
     # Create the HTML version of the message
     html = """\
-    <p>Congrats for sending test email with Mailtrap! \nIf you are viewing this email in your inbox – the integration works. Now send your email using our SMTP server and integration of your choice!\nGood luck! Hope it works.</p>
+    <p>Congrats for sending test email with Mailtrap! \nIf you are viewing this email in your inbox the integration works. Now send your email using our SMTP server and integration of your choice!\nGood luck! Hope it works.</p>
     <p><a href="{}">Click here to confirm your email</a></p>
     <!-- ... -->
     """.format(link)
@@ -152,35 +156,82 @@ def decode_token(token):
     payload = jwt.decode(token, SECRET_KEY, 'HS256')
     return payload['sub']
 
+@app.route('/exerciselist', methods=['GET'])
+def get_exercise_list():
+    try:
+        exercises = Exercise.query.all()
 
+        for exercise in exercises:
+            print(f"ID: {exercise.id}, Name: {exercise.name}, Calories Burnt: {exercise.calories_burnt}")
 
-
-from .model.food import Food, food_schema
-@app.route('/search_food', methods=['GET'])
-def search_food():
-    # Get the search query from the request
-    query = request.args.get('query')
-    matching_food_items = Food.query.filter(Food.name.contains(query)).all()
-    matching_food_items_data = food_schema.dump(matching_food_items, many=True)
-    if matching_food_items:
-        matching_food_items_data = food_schema.dump(matching_food_items, many=True)
-        return jsonify(matching_food_items_data)
-    else:
-        return jsonify(message='No matching food items found'), 404
-
+        print(exercises)
+  
+        return jsonify(Exercise_schema.dump(exercises))
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/add_exercise', methods=['POST'])
+def add_exercise_to_user():
+    try:
+        # Extract the user ID from the authentication token
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Authorization token is missing'}), 401
+        
+        user_id = decode_token(token)
+        
+        # Fetch the user from the database
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Get the exercise data from the request
+        exercise_id = request.json.get('exercise_id')
+        duration = request.json.get('duration')  # Assuming the duration of exercise is provided
+        
+        # Fetch the exercise from the database
+        exercise = Exercise.query.get(exercise_id)
+        if not exercise:
+            return jsonify({'error': 'Exercise not found'}), 404
+        
+        # Create a new record in the AddExercise table
+        new_add_exercise = AddExercise(user_id=user_id, exercise_id=exercise_id, duration=duration)
+        db.session.add(new_add_exercise)
+        db.session.commit()
+        
+        return jsonify({'message': 'Exercise added to user successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 @app.route('/add_food', methods=['POST'])
-def add_food():
-    data = request.get_json()
-    new_food = Food(
-        name=data['name'],
-        description=data['description'],
-        price=data['price'],
-        calories=data['calories'],
-        protein=data['protein'],
-        fat=data['fat'],
-        carbohydrates=data['carbohydrates']
-    )
-
-    db.session.add(new_food)
-    db.session.commit()
-    return food_schema.jsonify(message = 'added successfuly'), 201
+def add_food_to_user():
+    try:
+        # Extract the user ID from the authentication token
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Authorization token is missing'}), 401
+        
+        user_id = decode_token(token)
+        
+        # Fetch the user from the database
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Get the exercise data from the request
+        food_id = request.json.get('food_id')
+        quantity = request.json.get('quantity')  # Assuming the duration of exercise is provided
+        
+        # Fetch the exercise from the database
+        food = Food.query.get(food_id)
+        if not food:
+            return jsonify({'error': 'Exercise not found'}), 404
+        
+        # Create a new record in the AddExercise table
+        new_add_food = AddFood(user_id=user_id, food_id=food_id, quantity=quantity)
+        db.session.add(new_add_food)
+        db.session.commit()
+        
+        return jsonify({'message': 'Food added to user successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

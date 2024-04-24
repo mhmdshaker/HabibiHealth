@@ -17,4 +17,3 @@ class user_schema(ma.Schema):
     fields = ("id", "user_name", "email", "confirmed", "hashed_password")
     model = User
 user_schema = user_schema()
-
